@@ -1,0 +1,16 @@
+.gambar{
+    position: relative;
+}
+.gambar::before{
+    content: "";
+    position: absolute;
+}
+
+.nama{
+    position: relative;
+}
+.nama::before{
+    content: "";
+    position: absolute;
+    width: 100px;
+}

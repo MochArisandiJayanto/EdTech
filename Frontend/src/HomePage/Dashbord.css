@@ -1,0 +1,23 @@
+.judul{
+    position: relative;
+    font-size: 58px;
+    font-weight: bold;
+    text-align: center;
+}
+.judul::before{
+    content: "";
+    position: absolute;
+    background-color: #06D6A0;
+    margin-top: 30px;
+    width: 100%;
+    height: 30px;
+    z-index: -1;
+}
+
+.jdul{
+    margin-top: 15px;
+    width: 45%;
+    text-align: center;
+    color: #665E5E;
+    font-size: 23px;
+}
