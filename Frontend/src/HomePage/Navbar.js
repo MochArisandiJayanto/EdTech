@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
     chakra,
     Flex,
@@ -9,7 +9,6 @@ import {
     ModalOverlay,
     ModalContent,
     ModalHeader,
-    ModalFooter,
     ModalBody,
     ModalCloseButton,
     useDisclosure,
@@ -17,16 +16,23 @@ import {
     Grid,
     GridItem,
     Box,
-    Heading,
     FormControl,
     FormLabel,
     Input,
+    Avatar
 } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 
 
 export default function Navbar() {
     const { isOpen, onOpen, onClose } = useDisclosure();
+    const [modal, setModal] = useState('login')
+    const [user, setUser] = useState(null)
+
+    const submitLogin = (e) => {
+        e.preventDefault()
+        setUser('login')
+    }
 
     return (
         <React.Fragment>
@@ -53,67 +59,131 @@ export default function Navbar() {
                             <Button to={"/Home"} as={Link} colorScheme='black' variant="ghost">Home</Button>
                             <Button to={"/Kelas"} as={Link} colorScheme='black' variant="ghost">Kelas</Button>
                         </HStack>
-                        <HStack
-                            spacing={1}
-                            mr={1}
-                            color={"#006D77"}
-                        >
-                            <Button onClick={onOpen} colorScheme={"#006D77"} size="sm" variant='ghost'>
-                                Login
-                            </Button>
-                        </HStack>
-                        <HStack
-                            spacing={1}
-                            mr={1}
-                            color="white"
-                            bg={"#006D77"}
-                            borderRadius='20px'
-                        >
-                            <Button onClick={onOpen} variant="ghost" borderRadius='20px' size="sm">Register</Button>
-                        </HStack>
+                        {(user) ? (
+                            <HStack>
+                                <Avatar name='Dan Abrahmov' src='https://bit.ly/dan-abramov' />
+                            </HStack>
+                        ) : (
+                            <>
+                                <HStack
+                                    spacing={1}
+                                    mr={1}
+                                    color={"#006D77"}
+                                >
+                                    <Button onClick={() => {
+                                        setModal('login')
+                                        onOpen()
+                                    }} colorScheme={"#006D77"} size="sm" variant='ghost'>
+                                        Login
+                                    </Button>
+                                </HStack>
+                                <HStack
+                                    spacing={1}
+                                    mr={1}
+                                    color="white"
+                                    bg={"#006D77"}
+                                    borderRadius='20px'
+                                >
+                                    <Button onClick={() => {
+                                        setModal('register')
+                                        onOpen()
+                                    }} variant="ghost" borderRadius='20px' size="sm">Register</Button>
+                                </HStack>
+                            </>
+                        )}
                     </HStack>
                 </Flex>
             </chakra.header>
 
             <Modal isCentered isOpen={isOpen} onClose={onClose}>
                 <ModalOverlay />
-                <ModalContent borderRadius="20" width={{md: "400px", base: "400px"}} height={{md: "500px", base: "500px"}}>
-                    <ModalHeader color="#006D77" fontSize={30}><Center>Login EdTech</Center></ModalHeader>
-                    <Grid templateColumns='repeat(10, 1fr)' gap={1}>
-                        <GridItem colSpan={6} textAlign="right">Don't have account?</GridItem>
-                        <GridItem color="red" colStart={8}><a href="#">Register</a></GridItem>
-                    </Grid>
-                    <ModalCloseButton />
-                    <ModalBody>
-                        <Flex width="full" align="center" justifyContent="center">
-                            <Box p={2}>
-                                <Box my={4} textAlign="left">
-                                    <form>
-                                        <FormControl>
-                                            <FormLabel>Email</FormLabel>
-                                            <Input type="email" placeholder="test@test.com"/>
-                                        </FormControl>
-                                        <FormControl mt={6}>
-                                            <FormLabel>Password</FormLabel>
-                                            <Input type="password" placeholder="*******" />
-                                        </FormControl>
-                                        <Button width="full" mt={2} type="submit">
-                                            Sign In
-                                        </Button>
+                {(modal === 'login') ? (
+                    <ModalContent borderRadius="20" width={{ md: "400px", base: "400px" }} height={{ md: "500px", base: "500px" }}>
+                        <ModalHeader color="#006D77" fontSize={30}><Center>Login EdTech</Center></ModalHeader>
+                        <Grid templateColumns='repeat(10, 1fr)' gap={1}>
+                            <GridItem colSpan={6} textAlign="right">Don't have account?</GridItem>
+                            <GridItem color="red" colStart={8}>
+                                <Button onClick={() => {
+                                    onClose()
+                                    setModal('register')
+                                    onOpen()
+                                }}>Register</Button>
+                            </GridItem>
+                        </Grid>
+                        <ModalCloseButton />
+                        <ModalBody>
+                            <Flex width="full" align="center" justifyContent="center">
+                                <Box p={2}>
+                                    <Box my={4} textAlign="left">
+                                        <form onSubmit={submitLogin}>
+                                            <FormControl>
+                                                <FormLabel>Email</FormLabel>
+                                                <Input type="email" placeholder="test@test.com" />
+                                            </FormControl>
+                                            <FormControl mt={6}>
+                                                <FormLabel>Password</FormLabel>
+                                                <Input type="password" placeholder="*******" />
+                                            </FormControl>
+                                            <Button width="full" mt={2} type="submit">
+                                                Sign In
+                                            </Button>
 
-                                        <Center fontSize={15} mt={2}><p>Atau Masuk Dengan</p></Center>
-                                        <Button width="full" mt={2} type="submit" bg="#CB4539" color={"white"}>
-                                        <Image src="https://img.icons8.com/color/20/undefined/google-logo.png" marginRight={5}/>
-                                            Login with google
-                                        </Button>
-                                    </form>
+                                            <Center fontSize={15} mt={2}><p>Atau Masuk Dengan</p></Center>
+                                            <Button width="full" mt={2} type="submit" bg="#CB4539" color={"white"}>
+                                                <Image src="https://img.icons8.com/color/20/undefined/google-logo.png" marginRight={5} />
+                                                Login with google
+                                            </Button>
+                                        </form>
+                                    </Box>
                                 </Box>
-                            </Box>
-                        </Flex>
-                    </ModalBody>
-                    {/* <ModalFooter>
-                    </ModalFooter> */}
-                </ModalContent>
+                            </Flex>
+                        </ModalBody>
+                        {/* <ModalFooter>
+                        </ModalFooter> */}
+                    </ModalContent>
+                ) : (
+                    <ModalContent borderRadius="20" width={{ md: "400px", base: "400px" }} height={{ md: "600px", base: "600px" }}>
+                        <ModalHeader color="#006D77" fontSize={30}><Center>Register EdTech</Center></ModalHeader>
+                        <Grid templateColumns='repeat(10, 1fr)' gap={1}>
+                            <GridItem colSpan={6} textAlign="right">Already have account?</GridItem>
+                            <GridItem color="red" colStart={8}><Button onClick={() => {
+                                onClose()
+                                setModal('login')
+                                onOpen()
+                            }}>Login</Button></GridItem>
+                        </Grid>
+                        <ModalCloseButton />
+                        <ModalBody>
+                            <Flex width="full" align="center" justifyContent="center">
+                                <Box p={2}>
+                                    <Box my={4} textAlign="left">
+                                        <form>
+                                            <FormControl>
+                                                <FormLabel>Email</FormLabel>
+                                                <Input type="email" placeholder="Masukkan Email" />
+                                            </FormControl>
+                                            <FormControl mt={6}>
+                                                <FormLabel>Nama</FormLabel>
+                                                <Input type="nama" placeholder="Masukkan nama lengkap" />
+                                            </FormControl>
+                                            <FormControl mt={6}>
+                                                <FormLabel>Nomor Hp</FormLabel>
+                                                <Input type="nomor hp" placeholder="Masukkan nomor hp" />
+                                            </FormControl>
+                                            <FormControl mt={6}>
+                                                <FormLabel>Password</FormLabel>
+                                                <Input type="password" placeholder="Masukkan Password" />
+                                            </FormControl>
+                                            <Button width="full" mt={2} type="submit" bg="#CB4539" color={"white"}>
+                                                Register
+                                            </Button>
+                                        </form>
+                                    </Box>
+                                </Box>
+                            </Flex>
+                        </ModalBody>
+                    </ModalContent>
+                )}
             </Modal>
         </React.Fragment>
     );
